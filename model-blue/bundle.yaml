@@ -1,6 +1,6 @@
 ---
 apiVersion: "1"
-id: "model-dev"
+id: "model-dev-1"
 description: "Basic controller bundle"
 version: "7"
 availabilityPattern: ".*"
