@@ -4,108 +4,16 @@ removeStrategy:
   items: NONE
 
 items:
-- kind: organizationFolder
-  name: branch-source-job
-  description: 'org folder job'
-  displayName: branch-source-job
-  navigators:
-  - github:
-      apiUri: https://api.github.com
-      traits:
-      - sourceWildcardFilter:
-          excludes: ''
-          includes: jcasc-bundles-store
-      repoOwner: asantra1
-      credentialsId: github_user_pass_as_pat
-  orphanedItemStrategy:
-    defaultOrphanedItemStrategy:
-      pruneDeadBranches: true
-      daysToKeep: -1
-      numToKeep: -1
-      abortBuilds: false
-  properties:
-  - organizationChildHealthMetricsProperty:
-      templates:
-      - worstChildHealthMetric:
-          recursive: true
-      - averageChildHealthMetric: {}
-      - jobStatusHealthMetric:
-          unstable: true
-          countVirginJobs: false
-          failure: true
-          success: true
-          unbuilt: true
-      - projectEnabledHealthMetric: {}
-  - organizationChildOrphanedItemsProperty:
-      strategy:
-        inherit: {}
-  - organizationChildTriggersProperty:
-      templates:
-      - periodicFolderTrigger:
-          interval: 1d
-  - envVars: {}
-  - noTriggerOrganizationFolderProperty:
-      branches: .*
-  strategy:
-    allBranchesSame: {}
-  trigger:
-    periodicFolderTrigger:
-      interval: 1d
-- kind: pipeline
-  name: hello
-  concurrentBuild: true
-  definition:
-    cpsFlowDefinition:
-      sandbox: true
-      script: |2-
-
-        pipeline {
-          agent {
-            kubernetes {
-              label 'hello-app'  // all your pods will be named with this prefix, followed by a unique id
-              idleMinutes 2  // how long the pod will live after no jobs have run on it
-            }
-          }
-          stages {
-            stage('Hello Stage') {
-              steps {
-                sh "echo Hello CasC!"
-              }
-            }
-          }
-        }
-  description: Simple CasC pipeline
-  disabled: false
-  displayName: hello
-  resumeBlocked: false
-- kind: pipeline
-  name: webhook-pipeline-job
-  concurrentBuild: true
-  definition:
-    cpsFlowDefinition:
-      sandbox: true
-      script: |-
-        properties([pipelineTriggers([githubPush()])])
-        pipeline {
-                  agent {
-                    kubernetes {
-                      label 'hello-app'  // all your pods will be named with this prefix, followed by a unique id
-                      idleMinutes 2  // how long the pod will live after no jobs have run on it
-                    }
-                  }
-                  stages {
-                    stage('Checkout') {
-                     steps {
-                       git branch: 'master', credentialsId: 'github_user_pass_as_pat', url: 'https://github.com/asantra1/jcasc-bundles-store.git'
-                     }
-                    }
-                  }
-                }
-  description: ''
-  disabled: false
-  displayName: webhook-pipeline-job
-  properties:
-  - pipelineTriggers:
-      triggers:
-      - githubPush: {}
-  resumeBlocked: false
+  - kind: "folder"
+    name: "project-alpha"
+    displayName: "Project Alpha"
+    description: "Project Alpha is going to change the world!"
+    items:
+      - kind: "folder"
+        name: "project-alpha-tests"
+        displayName: "Project Alpha Tests"
+        items:
+          - kind: "folder"
+            name: "test-1"
+          - kind: "folder"
+            name: "test-2"
